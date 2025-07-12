@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Um portal completo com calculadoras de macros, gordura corporal, pace de corrida e outras ferramentas para sua jornada fitness.">
+    <title>Central de Calculadoras Fitness - Mateus Pereira</title>
+    <link rel="icon" href="https://mateuspereira.com/wp-content/uploads/2025/04/Logo-Black.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        .nav-link.active-link { color: #4f46e5; font-weight: 600; }
+        #content-loader { animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        .dropdown-menu { transition: opacity 0.2s ease-out, transform 0.2s ease-out; }
+    </style>
+</head>
+<body class="text-gray-800">
+    <div class="min-h-screen flex flex-col">
+        <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-40 w-full border-b border-slate-200">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="relative flex justify-center lg:justify-between items-center py-3">
+                    <a href="#dashboard" class="flex-shrink-0" data-page="dashboard"><img src="https://mateuspereira.com/wp-content/uploads/2025/04/site-1024x256.png" alt="Logo Mateus Pereira" class="h-16 w-auto"></a>
+                    <nav class="hidden lg:flex items-center space-x-1 text-sm font-medium text-slate-700 flex-wrap justify-end">
+                        <a href="#alimentos" class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-100" data-page="substituicoes-alimentos.html"><i class="fas fa-exchange-alt fa-fw text-slate-500"></i><span>Alimentos</span></a>
+                        <a href="#macros" class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-100" data-page="calculadora-macros.html"><i class="fas fa-utensils fa-fw text-slate-500"></i><span>Macros</span></a>
+                        <a href="#gordura-corporal" class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-100" data-page="calculadora-gordura-corporal.html"><i class="fas fa-percentage fa-fw text-slate-500"></i><span>Gordura Corporal</span></a>
+                        <a href="#ciclo-carboidratos" class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-100" data-page="calculadora-ciclo-carboidratos.html"><i class="fas fa-sync-alt fa-fw text-slate-500"></i><span>Ciclo de Carboidratos</span></a>
+                        <a href="#agua" class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-100" data-page="calculadora-agua.html"><i class="fas fa-tint fa-fw text-slate-500"></i><span>Água (Diária)</span></a>
+                        <a href="#custo-beneficio" class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-100" data-page="calculadora-custo-beneficio.html"><i class="fas fa-dollar-sign fa-fw text-slate-500"></i><span>Custo-Benefício</span></a>
+                        <div class="relative">
+                            <button id="dropdown-toggle" class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-100 w-full">
+                                <i class="fas fa-ellipsis-h fa-fw text-slate-500"></i><span>Outras</span><i class="fas fa-chevron-down text-xs ml-1"></i>
+                            </button>
+                            <div id="dropdown-menu" class="dropdown-menu absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-xl border border-slate-200 py-1 hidden">
+                                <a href="#age-grading" class="nav-link flex items-center gap-3 px-4 py-2 hover:bg-slate-100" data-page="calculadora-age-grading.html"><i class="fas fa-medal fa-fw"></i>Age Grading</a>
+                                <a href="#hidratacao-corrida" class="nav-link flex items-center gap-3 px-4 py-2 hover:bg-slate-100" data-page="calculadora-hidratacao-corrida.html"><i class="fas fa-tint fa-fw"></i>Hidratação para Corrida</a>
+                                <a href="#preditor-tempo" class="nav-link flex items-center gap-3 px-4 py-2 hover:bg-slate-100" data-page="calculadora-preditor-tempo.html"><i class="fas fa-chart-line fa-fw"></i>Preditor de Tempo de Corrida</a>
+                                <a href="#pace" class="nav-link flex items-center gap-3 px-4 py-2 hover:bg-slate-100" data-page="calculadora-pace.html"><i class="fas fa-tachometer-alt fa-fw"></i>Pace de Corrida</a>
+                                <a href="#1rm" class="nav-link flex items-center gap-3 px-4 py-2 hover:bg-slate-100" data-page="calculadora-1rm.html"><i class="fas fa-dumbbell fa-fw"></i>Calculadora 1RM</a>
+                                <a href="#frequencia-cardiaca" class="nav-link flex items-center gap-3 px-4 py-2 hover:bg-slate-100" data-page="calculadora-frequencia-cardiaca.html"><i class="fas fa-heartbeat fa-fw"></i>Zonas de FC</a>
+                                <a href="#volume-treino" class="nav-link flex items-center gap-3 px-4 py-2 hover:bg-slate-100" data-page="calculadora-volume-treino.html"><i class="fas fa-calculator fa-fw"></i>Volume de Treino</a>
+                                <a href="#timer-descanso" class="nav-link flex items-center gap-3 px-4 py-2 hover:bg-slate-100" data-page="timer-descanso.html"><i class="fas fa-stopwatch fa-fw"></i>Timer de Descanso</a>
+                            </div>
+                        </div>
+                    </nav>
+                    <div class="lg:hidden absolute right-4 top-1/2 -translate-y-1/2"><button id="mobile-menu-button" class="text-gray-700 p-2"><i class="fas fa-bars text-2xl"></i></button></div>
+                </div>
+                <div id="mobile-menu" class="hidden lg:hidden pb-4">
+                     </div>
+            </div>
+        </header>
+        <main id="content-loader" class="flex-grow"></main>
+        <footer class="w-full bg-white border-t border-slate-200 mt-10"><div class="container mx-auto py-6 px-4 text-center text-slate-600"><p class="font-semibold">Mateus Pereira - Consultoria Online</p><p class="text-sm mt-1">@MateusFarma | www.mateuspereira.com | 81 99999-6955</p></div></footer>
+    </div>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const contentLoader = document.getElementById('content-loader');
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const dropdownToggle = document.getElementById('dropdown-toggle');
+        const dropdownMenu = document.getElementById('dropdown-menu');
+        const defaultTitle = document.title;
+        const defaultDescription = document.querySelector('meta[name="description"]').getAttribute('content');
+
+        const renderDashboard = () => {
+            document.title = defaultTitle;
+            document.querySelector('meta[name="description"]').setAttribute('content', defaultDescription);
+            const oldStyle = document.getElementById('calculator-specific-style'); if (oldStyle) oldStyle.remove();
+            contentLoader.innerHTML = `<div id="dashboard-content" class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <section class="text-center pt-16 pb-12"><h1 class="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">Central de Calculadoras Fitness</h1><p class="mt-4 text-lg text-slate-600 max-w-2xl mx-auto">Todas as ferramentas que você precisa para sua jornada fitness em um só lugar.</p></section>
+                
+                <div class="mb-8"><h2 class="text-2xl sm:text-3xl font-bold text-slate-800 text-center">Principais Ferramentas</h2></div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 pb-8">
+                    <div class="bg-white p-8 rounded-2xl shadow-lg border flex flex-col"><div class="self-center inline-flex items-center justify-center h-16 w-16 rounded-full bg-teal-100 mb-6"><i class="fas fa-exchange-alt text-3xl text-teal-600"></i></div><h3 class="text-xl font-bold text-slate-900 text-center">Ferramenta de Alimentos</h3><p class="text-slate-600 mt-2 mb-6 flex-grow text-center">Compare ou encontre porções equivalentes.</p><a href="#alimentos" class="card-button w-full bg-teal-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-teal-700 text-center" data-page="substituicoes-alimentos.html">Acessar</a></div>
+                    <div class="bg-white p-8 rounded-2xl shadow-lg border flex flex-col"><div class="self-center inline-flex items-center justify-center h-16 w-16 rounded-full bg-emerald-100 mb-6"><i class="fas fa-utensils text-3xl text-emerald-600"></i></div><h3 class="text-xl font-bold text-slate-900 text-center">Calculadora de Macros</h3><p class="text-slate-600 mt-2 mb-6 flex-grow text-center">Calcule suas necessidades diárias.</p><a href="#macros" class="card-button w-full bg-emerald-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-emerald-700 text-center" data-page="calculadora-macros.html">Acessar</a></div>
+                    <div class="bg-white p-8 rounded-2xl shadow-lg border flex flex-col"><div class="self-center inline-flex items-center justify-center h-16 w-16 rounded-full bg-red-100 mb-6"><i class="fas fa-percentage text-3xl text-red-600"></i></div><h3 class="text-xl font-bold text-slate-900 text-center">Percentual de Gordura</h3><p class="text-slate-600 mt-2 mb-6 flex-grow text-center">Estime sua gordura corporal.</p><a href="#gordura-corporal" class="card-button w-full bg-red-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-red-700 text-center" data-page="calculadora-gordura-corporal.html">Acessar</a></div>
+                    <div class="bg-white p-8 rounded-2xl shadow-lg border flex flex-col"><div class="self-center inline-flex items-center justify-center h-16 w-16 rounded-full bg-amber-100 mb-6"><i class="fas fa-sync-alt text-3xl text-amber-600"></i></div><h3 class="text-xl font-bold text-slate-900 text-center">Ciclo de Carboidratos</h3><p class="text-slate-600 mt-2 mb-6 flex-grow text-center">Defina seu protocolo de carboidratos.</p><a href="#ciclo-carboidratos" class="card-button w-full bg-amber-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-amber-700 text-center" data-page="calculadora-ciclo-carboidratos.html">Acessar</a></div>
+                    <div class="bg-white p-8 rounded-2xl shadow-lg border flex flex-col"><div class="self-center inline-flex items-center justify-center h-16 w-16 rounded-full bg-blue-100 mb-6"><i class="fas fa-tint text-3xl text-blue-600"></i></div><h3 class="text-xl font-bold text-slate-900 text-center">Consumo de Água</h3><p class="text-slate-600 mt-2 mb-6 flex-grow text-center">Calcule sua meta de hidratação diária.</p><a href="#agua" class="card-button w-full bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-blue-700 text-center" data-page="calculadora-agua.html">Acessar</a></div>
+                    <div class="bg-white p-8 rounded-2xl shadow-lg border flex flex-col"><div class="self-center inline-flex items-center justify-center h-16 w-16 rounded-full bg-indigo-100 mb-6"><i class="fas fa-dollar-sign text-3xl text-indigo-600"></i></div><h3 class="text-xl font-bold text-slate-900 text-center">Custo-Benefício</h3><p class="text-slate-600 mt-2 mb-6 flex-grow text-center">Compare qual suplemento vale mais a pena.</p><a href="#custo-beneficio" class="card-button w-full bg-indigo-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-indigo-700 text-center" data-page="calculadora-custo-beneficio.html">Acessar</a></div>
+                </div>
+                <div class="my-8"><h2 class="text-2xl sm:text-3xl font-bold text-slate-800 text-center">Ferramentas para Treino</h2></div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 pb-8">
+                    <div class="bg-white p-8 rounded-2xl shadow-lg border flex flex-col"><div class="self-center inline-flex items-center justify-center h-16 w-16 rounded-full bg-orange-100 mb-6"><i class="fas fa-dumbbell text-3xl text-orange-600"></i></div><h3 class="text-xl font-bold text-slate-900 text-center">Calculadora 1RM</h3><p class="text-slate-600 mt-2 mb-6 flex-grow text-center">Estime sua força máxima.</p><a href="#1rm" class="card-button w-full bg-orange-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-orange-700 text-center" data-page="calculadora-1rm.html">Acessar</a></div>
+                    <div class="bg-white p-8 rounded-2xl shadow-lg border flex flex-col"><div class="self-center inline-flex items-center justify-center h-16 w-16 rounded-full bg-purple-100 mb-6"><i class="fas fa-calculator text-3xl text-purple-600"></i></div><h3 class="text-xl font-bold text-slate-900 text-center">Volume de Treino</h3><p class="text-slate-600 mt-2 mb-6 flex-grow text-center">Calcule o total de séries semanais.</p><a href="#volume-treino" class="card-button w-full bg-purple-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-purple-700 text-center" data-page="calculadora-volume-treino.html">Acessar</a></div>
+                    <div class="bg-white p-8 rounded-2xl shadow-lg border flex flex-col"><div class="self-center inline-flex items-center justify-center h-16 w-16 rounded-full bg-pink-100 mb-6 self-center"><i class="fas fa-heartbeat text-3xl text-pink-600"></i></div><h3 class="text-xl font-bold text-slate-900 text-center">Zonas de Frequência Cardíaca</h3><p class="text-slate-600 mt-2 mb-6 flex-grow text-center">Otimize seus treinos aeróbicos.</p><a href="#frequencia-cardiaca" class="card-button w-full bg-pink-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-pink-700 text-center" data-page="calculadora-frequencia-cardiaca.html">Acessar</a></div>
+                    <div class="bg-white p-8 rounded-2xl shadow-lg border flex flex-col"><div class="self-center inline-flex items-center justify-center h-16 w-16 rounded-full bg-gray-200 mb-6 self-center"><i class="fas fa-stopwatch text-3xl text-gray-600"></i></div><h3 class="text-xl font-bold text-slate-900 text-center">Timer de Descanso</h3><p class="text-slate-600 mt-2 mb-6 flex-grow text-center">Controle seus intervalos com precisão.</p><a href="#timer-descanso" class="card-button w-full bg-gray-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-gray-700 text-center" data-page="timer-descanso.html">Acessar</a></div>
+                </div>
+                <div class="my-8"><h2 class="text-2xl sm:text-3xl font-bold text-slate-800 text-center">Ferramentas para Corridas</h2></div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 pb-16 max-w-5xl mx-auto">
+                    <div class="bg-white p-8 rounded-2xl shadow-lg border flex flex-col"><div class="self-center inline-flex items-center justify-center h-16 w-16 rounded-full bg-red-200 mb-6"><i class="fas fa-tachometer-alt text-3xl text-red-700"></i></div><h3 class="text-xl font-bold text-slate-900 text-center">Pace de Corrida</h3><p class="text-slate-600 mt-2 mb-6 flex-grow text-center">Calcule seu ritmo em min/km.</p><a href="#pace" class="card-button w-full bg-red-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-red-700 text-center" data-page="calculadora-pace.html">Acessar</a></div>
+                    <div class="bg-white p-8 rounded-2xl shadow-lg border flex flex-col"><div class="self-center inline-flex items-center justify-center h-16 w-16 rounded-full bg-cyan-100 mb-6"><i class="fas fa-chart-line text-3xl text-cyan-600"></i></div><h3 class="text-xl font-bold text-slate-900 text-center">Preditor de Tempo</h3><p class="text-slate-600 mt-2 mb-6 flex-grow text-center">Estime seus tempos de prova.</p><a href="#preditor-tempo" class="card-button w-full bg-cyan-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-cyan-700 text-center" data-page="calculadora-preditor-tempo.html">Acessar</a></div>
+                    <div class="bg-white p-8 rounded-2xl shadow-lg border flex flex-col"><div class="self-center inline-flex items-center justify-center h-16 w-16 rounded-full bg-yellow-100 mb-6"><i class="fas fa-medal text-3xl text-yellow-700"></i></div><h3 class="text-xl font-bold text-slate-900 text-center">Age Grading</h3><p class="text-slate-600 mt-2 mb-6 flex-grow text-center">Compare sua performance por idade.</p><a href="#age-grading" class="card-button w-full bg-yellow-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-yellow-700 text-center" data-page="calculadora-age-grading.html">Acessar</a></div>
+                    <div class="bg-white p-8 rounded-2xl shadow-lg border flex flex-col"><div class="self-center inline-flex items-center justify-center h-16 w-16 rounded-full bg-sky-100 mb-6"><i class="fas fa-tint text-3xl text-sky-600"></i></div><h3 class="text-xl font-bold text-slate-900 text-center">Hidratação na Corrida</h3><p class="text-slate-600 mt-2 mb-6 flex-grow text-center">Estime sua necessidade de fluidos.</p><a href="#hidratacao-corrida" class="card-button w-full bg-sky-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-sky-700 text-center" data-page="calculadora-hidratacao-corrida.html">Acessar</a></div>
+                </div>
+            </div>`;
+        }
+        
+        const loadPage = async (pageUrl) => {
+            contentLoader.innerHTML = '<div class="text-center p-20"><p class="text-lg font-semibold">Carregando...</p></div>';
+            try {
+                const response = await fetch(pageUrl);
+                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                const htmlText = await response.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(htmlText, 'text/html');
+                const newTitle = doc.querySelector('title')?.textContent || defaultTitle;
+                const newDescription = doc.querySelector('meta[name="description"]')?.getAttribute('content') || defaultDescription;
+                document.title = newTitle;
+                document.querySelector('meta[name="description"]').setAttribute('content', newDescription);
+                const oldStyle = document.getElementById('calculator-specific-style');
+                if (oldStyle) oldStyle.remove();
+                const pageStyle = doc.head.querySelector('style');
+                if (pageStyle) {
+                    const newStyle = document.createElement('style');
+                    newStyle.id = 'calculator-specific-style';
+                    newStyle.textContent = pageStyle.textContent;
+                    document.head.appendChild(newStyle);
+                }
+                contentLoader.innerHTML = doc.body.innerHTML;
+                const scripts = contentLoader.querySelectorAll("script");
+                scripts.forEach(script => {
+                    const newScript = document.createElement("script");
+                    newScript.textContent = script.textContent;
+                    script.parentNode.replaceChild(newScript, script);
+                });
+            } catch (error) {
+                console.error("Falha ao carregar a página:", error);
+                contentLoader.innerHTML = `<div class="text-center p-20 text-red-600"><h2 class="text-2xl font-bold">Oops! Algo deu errado.</h2></div>`;
+            }
+        };
+
+        const handleNavigation = (pageUrl, isPopState = false) => {
+            const link = document.querySelector(`a[data-page="${pageUrl}"]`);
+            const slug = link ? link.getAttribute('href')?.substring(1) : 'dashboard';
+            document.querySelectorAll('.nav-link').forEach(l => {
+                l.classList.remove('active-link');
+                if (l.getAttribute('href') === `#${slug}`) l.classList.add('active-link');
+            });
+            if (pageUrl === 'dashboard') {
+                if (!isPopState) history.pushState({ page: 'dashboard' }, '', window.location.pathname + '#');
+                renderDashboard();
+            } else {
+                if (!isPopState) history.pushState({ page: pageUrl, slug: slug }, '', `#${slug}`);
+                loadPage(pageUrl);
+            }
+            mobileMenu.classList.add('hidden');
+            if(!isPopState) window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+        
+        function setupEventListeners(){
+            document.body.addEventListener('click', (event) => {
+                const link = event.target.closest('a.nav-link[data-page], a.card-button[data-page]');
+                if (link && link.dataset.page) {
+                    event.preventDefault();
+                    handleNavigation(link.dataset.page);
+                } else if (event.target.closest('a[data-page="dashboard"]')) {
+                    event.preventDefault();
+                    handleNavigation('dashboard');
+                }
+            });
+            mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+            dropdownToggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                dropdownMenu.classList.toggle('hidden');
+            });
+            document.addEventListener('click', () => {
+                dropdownMenu.classList.add('hidden');
+            });
+        }
+
+        window.addEventListener('popstate', (event) => {
+            handleNavigation(event.state?.page || 'dashboard', true);
+        });
+
+        function loadInitialPage(){
+            const hash = window.location.hash.substring(1);
+            if (hash && hash !== 'dashboard') {
+                const link = document.querySelector(`.nav-link[href="#${hash}"]`);
+                if (link) { handleNavigation(link.dataset.page); return; }
+            }
+            renderDashboard();
+        }
+        
+        setupEventListeners();
+        loadInitialPage();
+    });
+    </script>
+</body>
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Calcule a sua necessidade de hidratação, eletrólitos (sódio, potássio) e carboidratos (géis) durante a corrida com base na duração, intensidade e temperatura.">
+    <title>Calculadora de Hidratação e Nutrição para Corridas</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style> body { font-family: 'Inter', sans-serif; } </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased">
+
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8 max-w-4xl">
+        <header class="text-center mb-8 pt-8">
+            <div class="flex justify-center mb-6">
+                <img src="https://mateuspereira.com/wp-content/uploads/2025/04/site-1024x256.png" alt="Logo" class="h-16 w-auto">
+            </div>
+            <h1 class="text-3xl sm:text-4xl font-bold text-slate-900">Calculadora de Nutrição para Corrida</h1>
+            <p class="mt-2 text-lg text-slate-600">Estime sua necessidade de fluidos, eletrólitos e carboidratos.</p>
+        </header>
+
+        <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-lg border border-slate-200">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div>
+                    <label for="duration" class="block text-sm font-medium text-slate-700">Duração da Corrida (minutos)</label>
+                    <input type="number" id="duration" placeholder="Ex: 90" class="mt-1 block w-full bg-slate-100 border-slate-300 rounded-lg shadow-sm p-3">
+                </div>
+                <div>
+                    <label for="intensity" class="block text-sm font-medium text-slate-700">Intensidade / Ritmo</label>
+                    <select id="intensity" class="mt-1 block w-full bg-slate-100 border-slate-300 rounded-lg shadow-sm p-3">
+                        <option value="0">Leve (Trote)</option>
+                        <option value="50" selected>Moderado</option>
+                        <option value="100">Intenso (Ritmo Forte)</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="temperature" class="block text-sm font-medium text-slate-700">Temperatura Ambiente</label>
+                    <select id="temperature" class="mt-1 block w-full bg-slate-100 border-slate-300 rounded-lg shadow-sm p-3">
+                        <option value="0">Ameno (&lt; 20°C)</option>
+                        <option value="50" selected>Quente (20-27°C)</option>
+                        <option value="100">Muito Quente (&gt; 27°C)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="mt-8">
+                <button id="calculate-btn" class="w-full bg-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-indigo-700 transition-colors text-lg">
+                    Calcular Nutrição de Corrida
+                </button>
+            </div>
+        </div>
+
+        <div id="results-section" class="mt-8 space-y-6 hidden">
+            <div class="p-6 text-center bg-white rounded-2xl shadow-lg border border-slate-200">
+                <h2 class="text-xl font-bold text-slate-900 flex items-center justify-center gap-2"><i class="fas fa-tint text-blue-500"></i>Hidratação</h2>
+                <div class="my-3">
+                    <p class="text-md text-slate-600">Beba aproximadamente:</p>
+                    <p class="text-4xl font-extrabold text-blue-600 my-1"><span id="rate-result">0</span> ml a cada 20 minutos</p>
+                </div>
+                <div class="border-t border-slate-200 pt-3 mt-3 text-center">
+                    <p class="text-sm text-slate-600">Total estimado para sua corrida: <strong id="total-liters" class="text-slate-800">0 L</strong></p>
+                </div>
+            </div>
+
+            <div id="electrolytes-section" class="p-6 text-center bg-white rounded-2xl shadow-lg border border-slate-200 hidden">
+                <h2 class="text-xl font-bold text-slate-900 flex items-center justify-center gap-2"><i class="fas fa-pills text-orange-500"></i>Eletrólitos</h2>
+                <p class="text-xs text-slate-500 mb-3">(Recomendado para corridas > 60 min)</p>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-md text-slate-600">Sódio</p>
+                        <p class="text-2xl font-bold text-orange-600"><span id="sodium-result">0</span> mg/h</p>
+                    </div>
+                    <div>
+                        <p class="text-md text-slate-600">Potássio</p>
+                        <p class="text-2xl font-bold text-orange-600"><span id="potassium-result">0</span> mg/h</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="carbs-section" class="p-6 text-center bg-white rounded-2xl shadow-lg border border-slate-200 hidden">
+                <h2 class="text-xl font-bold text-slate-900 flex items-center justify-center gap-2"><i class="fas fa-bolt text-yellow-500"></i>Carboidratos</h2>
+                <p class="text-xs text-slate-500 mb-3">(Recomendado para corridas > 75 min)</p>
+                <p class="text-md text-slate-600">Consuma aproximadamente:</p>
+                <p class="text-3xl font-extrabold text-yellow-600 my-1"><span id="carbs-result">0</span> g por hora</p>
+                <p class="text-md text-slate-600">(~<span id="gels-result">0</span> gel(s) por hora)</p>
+            </div>
+        </div>
+
+        <footer class="text-center mt-10 text-sm text-slate-500">
+            <p>Valores baseados em diretrizes de nutrição esportiva. A necessidade individual pode variar.</p>
+        </footer>
+    </div>
+
+    <script>
+    (function() {
+        const calculateBtn = document.getElementById('calculate-btn');
+
+        calculateBtn.addEventListener('click', () => {
+            const duration = parseInt(document.getElementById('duration').value);
+            const intensityBonus = parseInt(document.getElementById('intensity').value);
+            const tempBonus = parseInt(document.getElementById('temperature').value);
+
+            if (!duration || duration <= 0) {
+                alert('Por favor, insira uma duração válida para a corrida.');
+                return;
+            }
+            
+            // Elementos de resultado
+            const resultsSection = document.getElementById('results-section');
+            const electrolytesSection = document.getElementById('electrolytes-section');
+            const carbsSection = document.getElementById('carbs-section');
+
+            // --- Cálculo de Hidratação ---
+            const baseRate = 150; 
+            const ratePer20Min = baseRate + intensityBonus + tempBonus;
+            const totalHydration = ratePer20Min * (duration / 20);
+            document.getElementById('rate-result').textContent = ratePer20Min.toFixed(0);
+            document.getElementById('total-liters').textContent = `${(totalHydration / 1000).toFixed(2)} L`;
+
+            // --- Cálculo de Eletrólitos ---
+            if (duration > 60) {
+                const sodiumRate = 300 + (tempBonus * 3); // 300-600mg
+                const potassiumRate = 75 + (tempBonus * 0.75); // 75-150mg
+                document.getElementById('sodium-result').textContent = `${sodiumRate.toFixed(0)}-${(sodiumRate*2).toFixed(0)}`;
+                document.getElementById('potassium-result').textContent = `${potassiumRate.toFixed(0)}-${(potassiumRate*2).toFixed(0)}`;
+                electrolytesSection.classList.remove('hidden');
+            } else {
+                electrolytesSection.classList.add('hidden');
+            }
+
+            // --- Cálculo de Carboidratos ---
+            if (duration > 75) {
+                const carbRate = 30 + (intensityBonus / 100 * 30); // 30-60g
+                const gelsPerHour = Math.round(carbRate / 25);
+                document.getElementById('carbs-result').textContent = `${carbRate.toFixed(0)}-${(carbRate*2).toFixed(0)}`;
+                document.getElementById('gels-result').textContent = `${gelsPerHour}-${gelsPerHour*2}`;
+                carbsSection.classList.remove('hidden');
+            } else {
+                carbsSection.classList.add('hidden');
+            }
+
+            resultsSection.classList.remove('hidden');
+        });
+    })();
+    </script>
+</body>
+</html>

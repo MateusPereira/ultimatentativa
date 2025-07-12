@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta name="description" content="Estime seu percentual de gordura corporal (BF) de forma precisa usando o método da Marinha Americana. Descubra sua massa magra e massa gorda para acompanhar sua evolução.">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Percentual de Gordura (BF)</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; }
+        .fade-in { animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        input[type="radio"]:checked + label {
+            border-color: #4f46e5;
+            background-color: #eef2ff;
+            color: #312e81;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800 antialiased">
+
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8 max-w-4xl">
+        <header class="text-center mb-8 pt-8">
+            <div class="flex justify-center mb-6">
+                <img src="https://mateuspereira.com/wp-content/uploads/2025/04/site-1024x256.png" 
+                     alt="Logo Mateus Pereira" class="h-16 w-auto"
+                     onerror="this.onerror=null; this.src='https://placehold.co/400x100/e2e8f0/4a5568?text=Logo+Nao+Encontrado';">
+            </div>
+            <h1 class="text-3xl sm:text-4xl font-bold text-gray-900">Calculadora de Percentual de Gordura (BF)</h1>
+            <p class="mt-2 text-lg text-gray-600">Use o método da Marinha Americana para estimar sua gordura corporal.</p>
+        </header>
+        <div class="bg-blue-50 border-l-4 border-blue-500 text-blue-800 p-6 rounded-r-lg shadow-md mb-8">
+            <h3 class="font-bold text-xl mb-3 flex items-center"><i class="fas fa-ruler-combined mr-3"></i>Como Tirar as Medidas Corretamente</h3>
+            <ul class="list-none space-y-2">
+                <li><i class="fas fa-check-circle text-blue-500 mr-2"></i>Todas as medidas devem ser feitas em centímetros (cm).</li>
+                <li><i class="fas fa-check-circle text-blue-500 mr-2"></i><strong>Cintura:</strong> Meça na altura do umbigo, relaxado.</li>
+                <li><i class="fas fa-check-circle text-blue-500 mr-2"></i><strong>Pescoço:</strong> Meça a circunferência.</li>
+                <li><i class="fas fa-check-circle text-blue-500 mr-2"></i><strong>Quadril (Apenas para Mulheres):</strong> Meça na parte mais larga.</li>
+            </ul>
+        </div>
+        <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-lg">
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Selecione o Gênero:</label>
+                <div class="flex-col sm:flex-row flex gap-4">
+                    <div class="flex-1">
+                        <input type="radio" name="gender" id="gender-male" value="male" class="hidden" checked>
+                        <label for="gender-male" class="w-full block cursor-pointer p-4 border-2 border-gray-300 rounded-lg text-center font-semibold transition">
+                            <i class="fas fa-mars mr-2"></i>Homem
+                        </label>
+                    </div>
+                    <div class="flex-1">
+                        <input type="radio" name="gender" id="gender-female" value="female" class="hidden">
+                        <label for="gender-female" class="w-full block cursor-pointer p-4 border-2 border-gray-300 rounded-lg text-center font-semibold transition">
+                            <i class="fas fa-venus mr-2"></i>Mulher
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label for="weight" class="block text-sm font-medium text-gray-700">Peso (kg)</label>
+                    <input type="number" id="weight" placeholder="Ex: 80" class="mt-1 block w-full bg-gray-50 border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 p-3">
+                </div>
+                <div>
+                    <label for="height" class="block text-sm font-medium text-gray-700">Altura (cm)</label>
+                    <input type="number" id="height" placeholder="Ex: 180" class="mt-1 block w-full bg-gray-50 border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 p-3">
+                </div>
+                <div>
+                    <label for="neck" class="block text-sm font-medium text-gray-700">Pescoço (cm)</label>
+                    <input type="number" id="neck" placeholder="Ex: 40" class="mt-1 block w-full bg-gray-50 border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 p-3">
+                </div>
+                <div>
+                    <label for="waist" class="block text-sm font-medium text-gray-700">Cintura (cm)</label>
+                    <input type="number" id="waist" placeholder="Ex: 85" class="mt-1 block w-full bg-gray-50 border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 p-3">
+                </div>
+                <div id="hip-input-container" class="hidden">
+                    <label for="hip" class="block text-sm font-medium text-gray-700">Quadril (cm)</label>
+                    <input type="number" id="hip" placeholder="Ex: 95" class="mt-1 block w-full bg-gray-50 border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 p-3">
+                </div>
+            </div>
+            <div class="mt-8">
+                <button id="calculate-btn" class="w-full bg-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-300 text-lg">
+                    Calcular Percentual de Gordura
+                </button>
+            </div>
+        </div>
+        <div id="results-section" class="mt-8 bg-white p-6 sm:p-8 rounded-2xl shadow-lg hidden fade-in">
+            <h2 class="text-2xl font-bold mb-6 text-center text-gray-900">Seu Resultado</h2>
+            <div class="text-center">
+                <p class="text-lg text-gray-600">Percentual de Gordura (BF)</p>
+                <p id="bf-percentage" class="text-6xl font-bold text-indigo-600 my-2">0.0%</p>
+                <p id="bf-category" class="text-2xl font-semibold mb-6">---</p>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-4 mb-4">
+                <div id="bf-progress-bar" class="h-4 rounded-full transition-all duration-500" style="width: 0%;"></div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6 text-center">
+                <div class="bg-gray-100 p-4 rounded-lg">
+                    <p class="text-sm font-medium text-gray-600">Massa Gorda</p>
+                    <p id="fat-mass" class="text-2xl font-bold text-gray-800">0.0 kg</p>
+                </div>
+                <div class="bg-gray-100 p-4 rounded-lg">
+                    <p class="text-sm font-medium text-gray-600">Massa Magra</p>
+                    <p id="lean-mass" class="text-2xl font-bold text-gray-800">0.0 kg</p>
+                </div>
+            </div>
+            <div class="mt-8">
+                <h3 class="text-lg font-semibold text-center mb-2">Tabela de Referência</h3>
+                <div id="reference-table" class="text-sm text-gray-600 border border-gray-200 rounded-lg p-4"></div>
+            </div>
+        </div>
+        <footer class="text-center mt-10 text-sm text-gray-500">
+            <p>Este método é uma estimativa. Para avaliações precisas, consulte um profissional.</p>
+        </footer>
+    </div>
+
+    <script>
+    (function() { // <--- INÍCIO DO ISOLAMENTO DO SCRIPT
+        const genderMaleRadio = document.getElementById('gender-male');
+        const genderFemaleRadio = document.getElementById('gender-female');
+        const hipInputContainer = document.getElementById('hip-input-container');
+        const calculateBtn = document.getElementById('calculate-btn');
+        const resultsSection = document.getElementById('results-section');
+        const bfPercentageEl = document.getElementById('bf-percentage');
+        const bfCategoryEl = document.getElementById('bf-category');
+        const bfProgressBar = document.getElementById('bf-progress-bar');
+        const referenceTable = document.getElementById('reference-table');
+        const fatMassEl = document.getElementById('fat-mass');
+        const leanMassEl = document.getElementById('lean-mass');
+
+        const maleCategories = [ { range: [0, 13], name: 'Atleta', color: 'bg-green-500' }, { range: [14, 17], name: 'Bom', color: 'bg-yellow-400' }, { range: [18, 24], name: 'Acima da Média', color: 'bg-orange-500' }, { range: [25, 100], name: 'Obesidade', color: 'bg-red-600' }];
+        const femaleCategories = [ { range: [0, 20], name: 'Atleta', color: 'bg-green-500' }, { range: [21, 24], name: 'Bom', color: 'bg-yellow-400' }, { range: [25, 31], name: 'Acima da Média', color: 'bg-orange-500' }, { range: [32, 100], name: 'Obesidade', color: 'bg-red-600' }];
+
+        function toggleGender() {
+            if (genderFemaleRadio.checked) {
+                hipInputContainer.classList.remove('hidden');
+                updateReferenceTable('female');
+            } else {
+                hipInputContainer.classList.add('hidden');
+                updateReferenceTable('male');
+            }
+        }
+
+        function updateReferenceTable(gender) {
+            const categories = gender === 'male' ? maleCategories : femaleCategories;
+            let tableHTML = `<h4 class="font-bold mb-2 text-center">${gender === 'male' ? 'Homens' : 'Mulheres'}</h4><ul class="space-y-1">`;
+            categories.forEach(cat => {
+                const rangeText = cat.range[0] === 0 ? `Até ${cat.range[1]}%` : (cat.range[1] === 100 ? `Acima de ${cat.range[0]-1}%` : `${cat.range[0]}% - ${cat.range[1]}%`);
+                tableHTML += `<li class="flex justify-between"><span>${cat.name}</span><span>${rangeText}</span></li>`;
+            });
+            tableHTML += `</ul>`;
+            referenceTable.innerHTML = tableHTML;
+        }
+
+        genderMaleRadio.addEventListener('change', toggleGender);
+        genderFemaleRadio.addEventListener('change', toggleGender);
+
+        calculateBtn.addEventListener('click', () => {
+            const gender = document.querySelector('input[name="gender"]:checked').value;
+            const weight_kg = parseFloat(document.getElementById('weight').value);
+            const height_cm = parseFloat(document.getElementById('height').value);
+            const neck_cm = parseFloat(document.getElementById('neck').value);
+            const waist_cm = parseFloat(document.getElementById('waist').value);
+            const hip_cm = parseFloat(document.getElementById('hip').value) || 0;
+
+            if (!weight_kg || !height_cm || !neck_cm || !waist_cm || (gender === 'female' && !hip_cm)) {
+                showModal('Por favor, preencha todos os campos de medidas com valores válidos.');
+                return;
+            }
+
+            let bf = 0;
+            if (gender === 'male') {
+                bf = (495 / (1.0324 - (0.19077 * Math.log10(waist_cm - neck_cm)) + (0.15456 * Math.log10(height_cm)))) - 450;
+            } else {
+                bf = (495 / (1.29579 - (0.35004 * Math.log10(waist_cm + hip_cm - neck_cm)) + (0.22100 * Math.log10(height_cm)))) - 450;
+            }
+
+            if (bf < 0 || !isFinite(bf)) {
+                showModal('As medidas inseridas resultaram em um valor inválido. Por favor, verifique os números e tente novamente.');
+                return;
+            }
+            
+            const fatMass = (bf / 100) * weight_kg;
+            const leanMass = weight_kg - fatMass;
+            updateUI(bf, gender, fatMass, leanMass);
+        });
+
+        function getCategory(bf, gender) {
+            const categories = gender === 'male' ? maleCategories : femaleCategories;
+            for (const category of categories) {
+                if (bf >= category.range[0] && bf <= category.range[1]) return category;
+            }
+            return { name: 'Indefinido', color: 'bg-gray-400' };
+        }
+
+        function updateUI(bf, gender, fatMass, leanMass) {
+            resultsSection.classList.remove('hidden');
+            const category = getCategory(bf, gender);
+            bfPercentageEl.textContent = `${bf.toFixed(1)}%`;
+            bfCategoryEl.textContent = category.name;
+            bfCategoryEl.className = `text-2xl font-semibold mb-6 ${category.color.replace('bg-', 'text-')}`;
+            bfProgressBar.style.width = `${Math.min(bf, 100)}%`;
+            bfProgressBar.className = `h-4 rounded-full transition-all duration-500 ${category.color}`;
+            fatMassEl.textContent = `${fatMass.toFixed(1)} kg`;
+            leanMassEl.textContent = `${leanMass.toFixed(1)} kg`;
+            updateReferenceTable(gender);
+            resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        
+        function showModal(message) {
+            const modalOverlay = document.createElement('div');
+            modalOverlay.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+            const modalContent = document.createElement('div');
+            modalContent.className = 'bg-white p-6 rounded-lg shadow-xl text-center max-w-sm mx-4';
+            modalContent.innerHTML = `<p class="text-gray-800 mb-4">${message}</p><button class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700">OK</button>`;
+            modalOverlay.appendChild(modalContent);
+            document.body.appendChild(modalOverlay);
+            modalOverlay.querySelector('button').addEventListener('click', () => document.body.removeChild(modalOverlay));
+        }
+
+        toggleGender();
+    })(); // <--- FIM DO ISOLAMENTO DO SCRIPT
+    </script>
+</body>
+</html>

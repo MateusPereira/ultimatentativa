@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta name="description" content="Calcule seu protocolo de ciclo de carboidratos. Defina as metas de macros para dias de carbo alto e baixo para otimizar a queima de gordura e o ganho de massa muscular.">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Ciclo de Carboidratos</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; }
+        .fade-in { animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        input[type="radio"]:checked + label {
+            border-color: #4f46e5;
+            background-color: #eef2ff;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800 antialiased">
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8 max-w-4xl">
+        <header class="text-center mb-8 pt-8">
+            <div class="flex justify-center mb-6">
+                <img src="https://mateuspereira.com/wp-content/uploads/2025/04/site-1024x256.png" 
+                     alt="Logo Mateus Pereira" class="h-16 w-auto"
+                     onerror="this.onerror=null; this.src='https://placehold.co/400x100/e2e8f0/4a5568?text=Logo+Nao+Encontrado';">
+            </div>
+            <h1 class="text-3xl sm:text-4xl font-bold text-gray-900">Calculadora de Ciclo de Carboidratos</h1>
+            <p class="mt-2 text-lg text-gray-600">Calcule seu protocolo para dias de carbo baixo e alto.</p>
+        </header>
+        <div class="bg-blue-50 border-l-4 border-blue-500 text-blue-800 p-6 rounded-r-lg shadow-md mb-8">
+            <h3 class="font-bold text-xl mb-3">Como Usar a Calculadora:</h3>
+            <ol class="list-decimal list-inside space-y-2">
+                <li>Primeiro, calcule seus macros de manutenção.</li>
+                <li>Insira os valores de proteína, gordura e carboidratos nos campos abaixo.</li>
+                <li>Escolha um dos protocolos de ciclo.</li>
+            </ol>
+        </div>
+        <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-lg">
+            <div>
+                <h3 class="text-xl font-bold mb-4 text-gray-900">1. Insira seus Macros de Manutenção</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                        <label for="base-protein" class="block text-sm font-medium text-gray-700">Proteínas (g)</label>
+                        <input type="number" id="base-protein" placeholder="Ex: 180" class="mt-1 block w-full bg-gray-50 border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 p-3">
+                    </div>
+                    <div>
+                        <label for="base-fat" class="block text-sm font-medium text-gray-700">Gorduras (g)</label>
+                        <input type="number" id="base-fat" placeholder="Ex: 70" class="mt-1 block w-full bg-gray-50 border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 p-3">
+                    </div>
+                    <div>
+                        <label for="base-carbs" class="block text-sm font-medium text-gray-700">Carboidratos (g)</label>
+                        <input type="number" id="base-carbs" placeholder="Ex: 250" class="mt-1 block w-full bg-gray-50 border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 p-3">
+                    </div>
+                </div>
+            </div>
+            <div class="mt-8">
+                <h3 class="text-xl font-bold mb-4 text-gray-900">2. Escolha o Protocolo do Ciclo</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div>
+                        <input type="radio" name="protocol" id="protocol-2-1" value="2/1" class="hidden" checked>
+                        <label for="protocol-2-1" class="block cursor-pointer p-4 border-2 border-gray-300 rounded-lg text-center transition">
+                            <span class="font-bold text-lg">2/1</span><br>
+                            <span class="text-sm">2 Dias Baixo / 1 Dia Alto</span>
+                        </label>
+                    </div>
+                    <div>
+                        <input type="radio" name="protocol" id="protocol-3-1" value="3/1" class="hidden">
+                        <label for="protocol-3-1" class="block cursor-pointer p-4 border-2 border-gray-300 rounded-lg text-center transition">
+                            <span class="font-bold text-lg">3/1</span><br>
+                            <span class="text-sm">3 Dias Baixo / 1 Dia Alto</span>
+                        </label>
+                    </div>
+                    <div>
+                        <input type="radio" name="protocol" id="protocol-4-1" value="4/1" class="hidden">
+                        <label for="protocol-4-1" class="block cursor-pointer p-4 border-2 border-gray-300 rounded-lg text-center transition">
+                            <span class="font-bold text-lg">4/1</span><br>
+                            <span class="text-sm">4 Dias Baixo / 1 Dia Alto</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-8">
+                <button id="calculate-btn" class="w-full bg-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-300 text-lg">
+                    Calcular Ciclo
+                </button>
+            </div>
+        </div>
+        <div id="results-section" class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-8 hidden">
+            <div class="bg-white p-6 rounded-2xl shadow-lg fade-in">
+                <h2 class="text-2xl font-bold mb-4 text-center text-red-600">Dia de Carbo Baixo</h2>
+                <div class="text-center mb-6">
+                    <p class="text-lg text-gray-600">Calorias Totais</p>
+                    <p id="calories-low" class="text-5xl font-bold text-red-600">0</p>
+                    <p class="text-sm text-gray-500">kcal/dia</p>
+                </div>
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center bg-blue-100 p-3 rounded-lg"><span class="font-bold text-blue-800"><i class="fas fa-drumstick-bite mr-2"></i>Proteínas</span><span id="protein-low" class="font-semibold text-lg text-blue-900">0g</span></div>
+                    <div class="flex justify-between items-center bg-amber-100 p-3 rounded-lg"><span class="font-bold text-amber-800"><i class="fas fa-bread-slice mr-2"></i>Carboidratos</span><span id="carbs-low" class="font-semibold text-lg text-amber-900">0g</span></div>
+                    <div class="flex justify-between items-center bg-red-100 p-3 rounded-lg"><span class="font-bold text-red-800"><i class="fas fa-bacon mr-2"></i>Gorduras</span><span id="fat-low" class="font-semibold text-lg text-red-900">0g</span></div>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-lg fade-in">
+                <h2 class="text-2xl font-bold mb-4 text-center text-emerald-600">Dia de Carbo Alto</h2>
+                <div class="text-center mb-6">
+                    <p class="text-lg text-gray-600">Calorias Totais</p>
+                    <p id="calories-high" class="text-5xl font-bold text-emerald-600">0</p>
+                    <p class="text-sm text-gray-500">kcal/dia</p>
+                </div>
+                <div class="space-y-3">
+                     <div class="flex justify-between items-center bg-blue-100 p-3 rounded-lg"><span class="font-bold text-blue-800"><i class="fas fa-drumstick-bite mr-2"></i>Proteínas</span><span id="protein-high" class="font-semibold text-lg text-blue-900">0g</span></div>
+                    <div class="flex justify-between items-center bg-amber-100 p-3 rounded-lg"><span class="font-bold text-amber-800"><i class="fas fa-bread-slice mr-2"></i>Carboidratos</span><span id="carbs-high" class="font-semibold text-lg text-amber-900">0g</span></div>
+                    <div class="flex justify-between items-center bg-red-100 p-3 rounded-lg"><span class="font-bold text-red-800"><i class="fas fa-bacon mr-2"></i>Gorduras</span><span id="fat-high" class="font-semibold text-lg text-red-900">0g</span></div>
+                </div>
+            </div>
+        </div>
+        <footer class="text-center mt-10 text-sm text-gray-500">
+            <p>Lembre-se: a consistência é a chave para o sucesso em qualquer dieta.</p>
+        </footer>
+    </div>
+
+    <script>
+    (function() { // <--- INÍCIO DO ISOLAMENTO DO SCRIPT
+        const calculateBtn = document.getElementById('calculate-btn');
+        const resultsSection = document.getElementById('results-section');
+
+        if (calculateBtn) {
+            calculateBtn.addEventListener('click', () => {
+                const baseProtein = parseFloat(document.getElementById('base-protein').value) || 0;
+                const baseFat = parseFloat(document.getElementById('base-fat').value) || 0;
+                const baseCarbs = parseFloat(document.getElementById('base-carbs').value) || 0;
+                const protocol = document.querySelector('input[name="protocol"]:checked').value;
+
+                if (baseProtein <= 0 || baseFat <= 0 || baseCarbs <= 0) {
+                    showModal('Por favor, preencha todos os campos de macronutrientes com valores válidos.');
+                    return;
+                }
+
+                const proteinLow = baseProtein;
+                const proteinHigh = baseProtein;
+                const fatLow = baseFat;
+                const fatHigh = baseFat;
+                const carbsLow = baseCarbs * 0.5;
+                let carbsHigh, deficit;
+
+                if (protocol === '2/1') { deficit = (baseCarbs - carbsLow) * 2; carbsHigh = baseCarbs + deficit;
+                } else if (protocol === '3/1') { deficit = (baseCarbs - carbsLow) * 3; carbsHigh = baseCarbs + deficit;
+                } else { deficit = (baseCarbs - carbsLow) * 4; carbsHigh = baseCarbs + deficit; }
+
+                const caloriesLow = (proteinLow * 4) + (carbsLow * 4) + (fatLow * 9);
+                const caloriesHigh = (proteinHigh * 4) + (carbsHigh * 4) + (fatHigh * 9);
+
+                updateUI({ proteinLow, fatLow, carbsLow, caloriesLow, proteinHigh, fatHigh, carbsHigh, caloriesHigh });
+            });
+        }
+
+        function updateUI(data) {
+            resultsSection.classList.remove('hidden');
+            document.getElementById('calories-low').textContent = data.caloriesLow.toFixed(0);
+            document.getElementById('protein-low').textContent = `${data.proteinLow.toFixed(0)}g`;
+            document.getElementById('fat-low').textContent = `${data.fatLow.toFixed(0)}g`;
+            document.getElementById('carbs-low').textContent = `${data.carbsLow.toFixed(0)}g`;
+            document.getElementById('calories-high').textContent = data.caloriesHigh.toFixed(0);
+            document.getElementById('protein-high').textContent = `${data.proteinHigh.toFixed(0)}g`;
+            document.getElementById('fat-high').textContent = `${data.fatHigh.toFixed(0)}g`;
+            document.getElementById('carbs-high').textContent = `${data.carbsHigh.toFixed(0)}g`;
+            resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        
+        function showModal(message) {
+            const modalOverlay = document.createElement('div');
+            modalOverlay.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+            const modalContent = document.createElement('div');
+            modalContent.className = 'bg-white p-6 rounded-lg shadow-xl text-center max-w-sm mx-4';
+            modalContent.innerHTML = `<p class="text-gray-800 mb-4">${message}</p><button class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700">OK</button>`;
+            modalOverlay.appendChild(modalContent);
+            document.body.appendChild(modalOverlay);
+            modalOverlay.querySelector('button').addEventListener('click', () => document.body.removeChild(modalOverlay));
+        }
+    })(); // <--- FIM DO ISOLAMENTO DO SCRIPT
+    </script>
+</body>
+</html>

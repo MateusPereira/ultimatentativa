@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta name="description" content="Ferramenta completa para substituir e comparar alimentos. Encontre porções equivalentes ou compare a tabela nutricional de dois alimentos com base na Tabela TACO.">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ferramenta de Alimentos - Substituir e Comparar</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .fade-in { animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .search-results-list::-webkit-scrollbar { width: 8px; }
+        .search-results-list::-webkit-scrollbar-track { background: #f1f5f9; }
+        .search-results-list::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .search-results-list::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        input[type="radio"]:checked + label { background-color: #4f46e5; color: white; border-color: #4f46e5; }
+        .mode-switch.active { background-color: #4f46e5; color: white; }
+        .mode-switch:not(.active) { background-color: #eef2ff; color: #4338ca; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased">
+
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8 max-w-7xl">
+        
+        <header class="text-center mb-8 pt-8">
+            <div class="flex justify-center mb-6">
+                <img src="https://mateuspereira.com/wp-content/uploads/2025/04/site-1024x256.png" 
+                     alt="Logo Mateus Pereira" class="h-16 w-auto"
+                     onerror="this.onerror=null; this.src='https://placehold.co/400x100/e2e8f0/4a5568?text=Logo';">
+            </div>
+            <h1 id="page-title" class="text-3xl sm:text-4xl font-bold text-slate-900">Buscador de Alimentos Equivalentes</h1>
+            <p id="page-subtitle" class="mt-2 text-lg text-slate-600">Encontre porções de alimentos substitutos com base nos macros e no grupo alimentar.</p>
+        </header>
+
+        <div class="mb-8 flex justify-center">
+            <div class="flex rounded-lg border-2 border-indigo-600 font-semibold">
+                <button id="mode-substitute" class="mode-switch active px-6 py-2 rounded-l-md transition">Substituir</button>
+                <button id="mode-compare" class="mode-switch px-6 py-2 rounded-r-md transition">Comparar</button>
+            </div>
+        </div>
+
+        <div id="app-container">
+            <div id="substitute-view">
+                <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-lg border border-slate-200">
+                    <label for="s-search-input" class="block text-lg font-semibold text-slate-800 mb-2">1. Procure pelo alimento de referência:</label>
+                    <div class="relative"><input type="text" id="s-search-input" placeholder="Carregando base de dados..." class="w-full bg-slate-100 border-slate-300 rounded-lg shadow-sm p-4 text-lg" disabled><div id="s-search-results" class="search-results-list absolute z-20 w-full mt-1 bg-white border border-slate-300 rounded-lg shadow-lg max-h-72 overflow-y-auto hidden"></div></div>
+                    <div id="s-config-section" class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4 items-end hidden">
+                        <div><label for="s-grams-input" class="block text-sm font-medium text-slate-700">Quantidade (g):</label><input type="number" id="s-grams-input" value="100" class="mt-1 w-full bg-slate-100 border-slate-300 rounded-lg p-2"></div>
+                        <div><label class="block text-sm font-medium text-slate-700">Encontrar equivalência por:</label><div class="mt-1 flex rounded-lg border border-slate-300 p-0.5"><input type="radio" name="s_match_by" id="s-match-by-carbs" value="carbs" class="hidden" checked><label for="s-match-by-carbs" class="flex-1 text-center cursor-pointer rounded-md p-1.5 text-sm font-semibold">Carboidratos</label><input type="radio" name="s_match_by" id="s-match-by-protein" value="protein" class="hidden"><label for="s-match-by-protein" class="flex-1 text-center cursor-pointer rounded-md p-1.5 text-sm font-semibold">Proteínas</label></div></div>
+                    </div>
+                </div>
+                <div id="s-substitution-section" class="mt-8 hidden fade-in">
+                    <div><h2 class="text-2xl font-bold text-slate-900 mb-4">2. Alimento de Referência</h2><div id="s-reference-food-card" class="bg-white p-5 rounded-xl shadow-md border border-slate-200"></div></div>
+                    <div class="mt-8"><h2 class="text-2xl font-bold text-slate-900 mb-4">3. Top 20 Sugestões de Alimentos Equivalentes</h2><div id="s-substitutes-list" class="grid grid-cols-1 lg:grid-cols-2 gap-3"></div></div>
+                </div>
+            </div>
+
+            <div id="compare-view" class="hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="bg-white p-6 rounded-2xl shadow-lg border border-slate-200">
+                        <h3 class="text-xl font-bold text-slate-800 mb-3">Alimento 1</h3>
+                        <div class="relative"><input type="text" id="c-search-input-1" placeholder="Procure um alimento..." class="w-full bg-slate-100 border-slate-300 rounded-lg shadow-sm p-3" disabled><div id="c-search-results-1" class="search-results-list absolute z-10 w-full mt-1 bg-white border border-slate-300 rounded-lg shadow-lg max-h-60 overflow-y-auto hidden"></div></div>
+                        <div id="c-food-display-1" class="mt-4"></div>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-lg border border-slate-200">
+                        <h3 class="text-xl font-bold text-slate-800 mb-3">Alimento 2</h3>
+                        <div class="relative"><input type="text" id="c-search-input-2" placeholder="Procure um alimento..." class="w-full bg-slate-100 border-slate-300 rounded-lg shadow-sm p-3" disabled><div id="c-search-results-2" class="search-results-list absolute z-10 w-full mt-1 bg-white border border-slate-300 rounded-lg shadow-lg max-h-60 overflow-y-auto hidden"></div></div>
+                        <div id="c-food-display-2" class="mt-4"></div>
+                    </div>
+                </div>
+                <div id="c-comparison-details" class="mt-8 hidden fade-in">
+                     <h2 class="text-2xl font-bold text-slate-900 mb-4 text-center">Comparativo Nutricional</h2>
+                     <div class="bg-white p-6 rounded-2xl shadow-lg border border-slate-200 space-y-4"></div>
+                </div>
+            </div>
+        </div>
+        
+        <footer class="text-center mt-12 text-sm text-slate-500"><p>Fonte: Tabela Brasileira de Composição de Alimentos (TACO), 4ª edição.</p></footer>
+    </div>
+
+    <script>
+    (function() {
+        let foodData = [];
+        const keyMap = { id: 'id', name: 'description', category: 'category', kcal: 'energy_kcal', protein: 'protein_g', carbs: 'carbohydrate_g', fat: 'lipid_g' };
+        const superCategoryMap = { 'Cereais e derivados': 'Carboidratos', 'Verduras, hortaliças e derivados': 'Vegetais', 'Frutas e derivados': 'Frutas', 'Gorduras e óleos': 'Gorduras', 'Pescados e frutos do mar': 'Proteínas', 'Carnes e derivados': 'Proteínas', 'Leite e derivados': 'Proteínas/Gorduras', 'Bebidas (alcoólicas e não alcoólicas)': 'Outros', 'Ovos e derivados': 'Proteínas', 'Produtos açucarados': 'Outros', 'Leguminosas e derivados': 'Carboidratos/Proteínas', 'Nozes e sementes oleaginosas': 'Gorduras', 'Tubérculos e derivados': 'Carboidratos', 'Alimentos preparados': 'Outros', 'Miscelâneas': 'Outros' };
+        const exclusionKeywords = ['doce', 'em calda', 'frito', 'frita', 'recheado', 'recheada', 'mistura para', 'empanado', 'empanada', 'canjica', 'açucarado', 'achocolatado', 'pronto', 'pronta', 'industrializado', 'defumado'];
+
+        async function loadFoodData() {
+            try {
+                const response = await fetch('TACO.json');
+                if (!response.ok) throw new Error(`Não foi possível carregar TACO.json`);
+                foodData = await response.json();
+                if (!Array.isArray(foodData) || foodData.length === 0) throw new Error("JSON vazio ou em formato incorreto.");
+                foodData.forEach(food => { food.superCategory = superCategoryMap[food[keyMap.category]] || 'Outros'; });
+                document.querySelectorAll('input[type="text"]').forEach(input => { input.disabled = false; input.placeholder = "Procure um alimento..."; });
+            } catch (error) {
+                console.error('ERRO CRÍTICO:', error);
+                document.querySelectorAll('input[type="text"]').forEach(input => input.placeholder = "Erro ao carregar dados.");
+            }
+        }
+
+        function sanitizeValue(value) {
+            if (value === undefined || value === null || value === 'NA' || value === 'Tr') return 0;
+            return parseFloat(String(value).replace(',', '.')) || 0;
+        }
+
+        const modeSubstituteBtn = document.getElementById('mode-substitute');
+        const modeCompareBtn = document.getElementById('mode-compare');
+        const substituteView = document.getElementById('substitute-view');
+        const compareView = document.getElementById('compare-view');
+        const pageTitle = document.getElementById('page-title');
+        const pageSubtitle = document.getElementById('page-subtitle');
+        modeSubstituteBtn.addEventListener('click', () => switchMode('substitute'));
+        modeCompareBtn.addEventListener('click', () => switchMode('compare'));
+        function switchMode(mode) {
+            if (mode === 'substitute') {
+                modeSubstituteBtn.classList.add('active'); modeCompareBtn.classList.remove('active');
+                substituteView.classList.remove('hidden'); compareView.classList.add('hidden');
+                pageTitle.textContent = 'Buscador de Alimentos Equivalentes';
+                pageSubtitle.textContent = 'Encontre porções de alimentos substitutos com base nos macros e no grupo alimentar.';
+            } else {
+                modeSubstituteBtn.classList.remove('active'); modeCompareBtn.classList.add('active');
+                substituteView.classList.add('hidden'); compareView.classList.remove('hidden');
+                pageTitle.textContent = 'Comparador de Alimentos';
+                pageSubtitle.textContent = 'Selecione e ajuste as porções para comparar alimentos lado a lado.';
+            }
+        }
+        
+        // --- LÓGICA DA FERRAMENTA DE SUBSTITUIÇÃO ---
+        (function substituteTool() {
+            let selectedFood = null;
+            const searchInput = document.getElementById('s-search-input');
+            const searchResults = document.getElementById('s-search-results');
+            const configSection = document.getElementById('s-config-section');
+            const gramsInput = document.getElementById('s-grams-input');
+            const substitutionSection = document.getElementById('s-substitution-section');
+            const referenceFoodCard = document.getElementById('s-reference-food-card');
+            const substitutesList = document.getElementById('s-substitutes-list');
+            searchInput.addEventListener('input', () => handleSearch(searchInput, searchResults));
+            searchResults.addEventListener('click', (e) => {
+                if (e.target.dataset.id) {
+                    const foodId = e.target.dataset.id;
+                    selectedFood = foodData.find(f => f[keyMap.id] == foodId);
+                    searchResults.classList.add('hidden'); searchInput.value = selectedFood[keyMap.name];
+                    configSection.classList.remove('hidden'); calculateAndDisplayAll();
+                }
+            });
+            gramsInput.addEventListener('input', calculateAndDisplayAll);
+            document.querySelectorAll('input[name="s_match_by"]').forEach(radio => radio.addEventListener('change', calculateAndDisplayAll));
+            function calculateAndDisplayAll() {
+                if (!selectedFood) return;
+                const grams = parseFloat(gramsInput.value) || 100;
+                const matchBy = document.querySelector('input[name="s_match_by"]:checked').value;
+                const refMacros = { kcal: (sanitizeValue(selectedFood[keyMap.kcal]) / 100) * grams, protein: (sanitizeValue(selectedFood[keyMap.protein]) / 100) * grams, carbs: (sanitizeValue(selectedFood[keyMap.carbs]) / 100) * grams, fat: (sanitizeValue(selectedFood[keyMap.fat]) / 100) * grams };
+                displayReferenceFood(selectedFood, grams, refMacros);
+                const substitutes = findSubstitutes(selectedFood, refMacros, matchBy);
+                displaySubstitutes(substitutes);
+                substitutionSection.classList.remove('hidden');
+            }
+            function findSubstitutes(baseFood, refMacros, matchBy) {
+                const primaryMacroTarget = refMacros[matchBy]; if (primaryMacroTarget <= 0) return [];
+                const scoredFoods = foodData.map(food => {
+                    if (food[keyMap.id] == baseFood[keyMap.id]) return null;
+                    const foodNameLower = food[keyMap.name].toLowerCase();
+                    if (exclusionKeywords.some(keyword => foodNameLower.includes(keyword))) return null;
+                    const substitutePrimaryMacroPer100g = sanitizeValue(food[keyMap[matchBy]]);
+                    if (substitutePrimaryMacroPer100g <= 0) return null;
+                    const gramsNeeded = (primaryMacroTarget / substitutePrimaryMacroPer100g) * 100;
+                    const subMacros = { kcal: (sanitizeValue(food[keyMap.kcal]) / 100) * gramsNeeded, protein: (sanitizeValue(food[keyMap.protein]) / 100) * gramsNeeded, carbs: (sanitizeValue(food[keyMap.carbs]) / 100) * gramsNeeded, fat: (sanitizeValue(food[keyMap.fat]) / 100) * gramsNeeded };
+                    const otherMacro = matchBy === 'carbs' ? 'protein' : 'carbs';
+                    const macroScore = Math.abs(refMacros[otherMacro] - subMacros[otherMacro]) + Math.abs(refMacros.fat - subMacros.fat);
+                    const categoryPenalty = food.superCategory === baseFood.superCategory ? 0 : 50;
+                    const score = macroScore + categoryPenalty;
+                    return { ...food, gramsNeeded, calculatedMacros: subMacros, score };
+                }).filter(item => item && item.gramsNeeded > 0 && item.gramsNeeded < 5000);
+                return scoredFoods.sort((a, b) => a.score - b.score).slice(0, 20);
+            }
+            function displayReferenceFood(food, grams, macros) { referenceFoodCard.innerHTML = `<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"><div class="flex-grow"><h3 class="text-xl font-bold text-slate-800">${food[keyMap.name]}</h3><p class="text-sm font-semibold text-indigo-600">${food.superCategory} | Porção de ${grams.toFixed(0)}g</p></div><div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-xs w-full sm:w-auto"><div class="bg-sky-50 text-sky-800 p-2 rounded-lg"><strong class="block font-bold">${macros.protein.toFixed(1)}g</strong><span>Proteína</span></div><div class="bg-amber-50 text-amber-800 p-2 rounded-lg"><strong class="block font-bold">${macros.carbs.toFixed(1)}g</strong><span>Carbs</span></div><div class="bg-red-50 text-red-800 p-2 rounded-lg"><strong class="block font-bold">${macros.fat.toFixed(1)}g</strong><span>Gordura</span></div><div class="bg-slate-100 text-slate-700 p-2 rounded-lg"><strong class="block font-bold">${macros.kcal.toFixed(0)}</strong><span>Kcal</span></div></div></div>`; }
+            function displaySubstitutes(substitutes) {
+                if (substitutes.length === 0) substitutesList.innerHTML = '<p class="text-center text-slate-500">Nenhum substituto prático foi encontrado.</p>';
+                else substitutesList.innerHTML = substitutes.map(sub => `<div class="bg-white p-3 rounded-xl shadow-sm border border-slate-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"><div class="flex-grow"><h4 class="font-bold text-md text-indigo-700">${sub[keyMap.name]}</h4><p class="text-sm font-semibold text-slate-600">Porção: <span class="text-indigo-600">${sub.gramsNeeded.toFixed(0)}g</span></p></div><div class="grid grid-cols-4 gap-2 text-center text-xs w-full sm:max-w-xs lg:max-w-sm"><div title="Proteína"><i class="fas fa-drumstick-bite text-sky-600 mb-1"></i><p class="font-bold">${sub.calculatedMacros.protein.toFixed(1)}g</p></div><div title="Carboidratos"><i class="fas fa-bread-slice text-amber-600 mb-1"></i><p class="font-bold">${sub.calculatedMacros.carbs.toFixed(1)}g</p></div><div title="Gordura"><i class="fas fa-bacon text-red-600 mb-1"></i><p class="font-bold">${sub.calculatedMacros.fat.toFixed(1)}g</p></div><div title="Calorias"><i class="fas fa-fire-alt text-slate-500 mb-1"></i><p class="font-bold">${sub.calculatedMacros.kcal.toFixed(0)}</p></div></div></div>`).join('');
+            }
+        })();
+
+        // --- LÓGICA DA FERRAMENTA DE COMPARAÇÃO ---
+        (function compareTool() {
+            let food1 = null, food2 = null;
+            let grams1 = 100, grams2 = 100;
+
+            const input1 = document.getElementById('c-search-input-1');
+            const results1 = document.getElementById('c-search-results-1');
+            const display1 = document.getElementById('c-food-display-1');
+            const input2 = document.getElementById('c-search-input-2');
+            const results2 = document.getElementById('c-search-results-2');
+            const display2 = document.getElementById('c-food-display-2');
+            const detailsEl = document.getElementById('c-comparison-details');
+
+            input1.addEventListener('input', () => handleSearch(input1, results1));
+            input2.addEventListener('input', () => handleSearch(input2, results2));
+            results1.addEventListener('click', (e) => handleSelection(e, 1));
+            results2.addEventListener('click', (e) => handleSelection(e, 2));
+            
+            // --- LÓGICA DE ATUALIZAÇÃO REFINADA ---
+            function handleSelection(e, foodNumber) {
+                if (!e.target.dataset.id) return;
+                const foodId = e.target.dataset.id;
+                const selected = foodData.find(f => f[keyMap.id] == foodId);
+                
+                if (foodNumber === 1) {
+                    food1 = selected;
+                    grams1 = 100; // Reseta para 100g ao selecionar novo alimento
+                    results1.classList.add('hidden');
+                    input1.value = selected[keyMap.name];
+                    // Renderiza o card pela primeira vez
+                    renderCardStructure(1, food1);
+                } else {
+                    food2 = selected;
+                    grams2 = 100;
+                    results2.classList.add('hidden');
+                    input2.value = selected[keyMap.name];
+                    renderCardStructure(2, food2);
+                }
+                updateAllDisplays();
+            }
+            
+            function renderCardStructure(num, food) {
+                const displayEl = document.getElementById(`c-food-display-${num}`);
+                displayEl.innerHTML = `<div class="bg-slate-50 p-4 rounded-lg mt-3"><div class="flex justify-between items-center"><h4 class="font-bold text-indigo-700">${food[keyMap.name]}</h4><div class="w-24"><label for="c-grams-input-${num}" class="text-xs">Porção (g)</label><input type="number" id="c-grams-input-${num}" value="100" class="w-full border-slate-300 rounded p-1 text-center"></div></div><p class="text-sm text-slate-500 mb-3">Valores para a porção definida</p><ul class="text-sm space-y-1"><li class="flex justify-between"><span>Proteínas:</span> <strong id="c-protein-display-${num}" class="text-sky-700">0.0g</strong></li><li class="flex justify-between"><span>Carboidratos:</span> <strong id="c-carbs-display-${num}" class="text-amber-700">0.0g</strong></li><li class="flex justify-between"><span>Gorduras:</span> <strong id="c-fat-display-${num}" class="text-red-700">0.0g</strong></li><li class="flex justify-between border-t pt-1 mt-1"><span>Calorias:</span> <strong id="c-kcal-display-${num}">0 kcal</strong></li></ul></div>`;
+                
+                document.getElementById(`c-grams-input-${num}`).addEventListener('input', (e) => {
+                    if (num === 1) grams1 = parseFloat(e.target.value) || 0;
+                    else grams2 = parseFloat(e.target.value) || 0;
+                    updateAllDisplays();
+                });
+            }
+
+            function updateAllDisplays() {
+                let macros1, macros2;
+                if (food1) {
+                    macros1 = getMacrosForGrams(food1, grams1);
+                    updateCardMacros(1, macros1);
+                }
+                if (food2) {
+                    macros2 = getMacrosForGrams(food2, grams2);
+                    updateCardMacros(2, macros2);
+                }
+                if (food1 && food2) {
+                    updateComparisonChart(macros1, macros2);
+                }
+            }
+            
+            function getMacrosForGrams(food, grams) {
+                return {
+                    kcal: (sanitizeValue(food[keyMap.kcal]) / 100) * grams,
+                    protein: (sanitizeValue(food[keyMap.protein]) / 100) * grams,
+                    carbs: (sanitizeValue(food[keyMap.carbs]) / 100) * grams,
+                    fat: (sanitizeValue(food[keyMap.fat]) / 100) * grams,
+                };
+            }
+            
+            function updateCardMacros(num, macros) {
+                document.getElementById(`c-protein-display-${num}`).textContent = `${macros.protein.toFixed(1)}g`;
+                document.getElementById(`c-carbs-display-${num}`).textContent = `${macros.carbs.toFixed(1)}g`;
+                document.getElementById(`c-fat-display-${num}`).textContent = `${macros.fat.toFixed(1)}g`;
+                document.getElementById(`c-kcal-display-${num}`).textContent = `${macros.kcal.toFixed(0)} kcal`;
+            }
+
+            function updateComparisonChart(macros1, macros2) {
+                detailsEl.classList.remove('hidden');
+                detailsEl.querySelector('div').innerHTML = `
+                    ${renderComparisonBar('Proteína', macros1.protein, macros2.protein, 'g', 'bg-sky-500')}
+                    ${renderComparisonBar('Carboidratos', macros1.carbs, macros2.carbs, 'g', 'bg-amber-500')}
+                    ${renderComparisonBar('Gorduras', macros1.fat, macros2.fat, 'g', 'bg-red-500')}
+                    ${renderComparisonBar('Calorias', macros1.kcal, macros2.kcal, 'kcal', 'bg-slate-600')}`;
+            }
+        
+            function renderComparisonBar(label, value1, value2, unit, colorClass) {
+                const total = Math.max(value1, value2, 1);
+                const percent1 = (value1 / total) * 100;
+                const percent2 = (value2 / total) * 100;
+                const val1_display = unit === 'g' ? value1.toFixed(1) : value1.toFixed(0);
+                const val2_display = unit === 'g' ? value2.toFixed(1) : value2.toFixed(0);
+                return `<div><h4 class="text-sm font-bold mb-2">${label}</h4><div class="space-y-2"><div class="flex items-center gap-2"><span class="w-20 text-right font-bold text-sm">${val1_display}${unit}</span><div class="w-full bg-slate-200 rounded-full h-4"><div class="${colorClass} h-4 rounded-full" style="width: ${percent1}%"></div></div></div><div class="flex items-center gap-2"><span class="w-20 text-right font-bold text-sm">${val2_display}${unit}</span><div class="w-full bg-slate-200 rounded-full h-4"><div class="${colorClass} h-4 rounded-full" style="width: ${percent2}%"></div></div></div></div></div>`;
+            }
+        })();
+
+        // --- FUNÇÕES GENÉRICAS ---
+        function handleSearch(inputEl, resultsEl) {
+            const query = inputEl.value.toLowerCase().trim();
+            if (query.length < 3) { resultsEl.classList.add('hidden'); return; }
+            const matches = foodData.filter(food => {
+                const foodName = food[keyMap.name];
+                return foodName && typeof foodName === 'string' && foodName.toLowerCase().includes(query);
+            }).slice(0, 50);
+            resultsEl.innerHTML = matches.map(food => `<div class="p-3 hover:bg-slate-100 cursor-pointer" data-id="${food[keyMap.id]}">${food[keyMap.name]}</div>`).join('');
+            resultsEl.classList.remove('hidden');
+        }
+        document.addEventListener('click', (e) => { if (!e.target.closest('.relative')) { document.querySelectorAll('.search-results-list').forEach(el => el.classList.add('hidden')); } });
+        
+        loadFoodData();
+    })();
+    </script>
+</body>
+</html>

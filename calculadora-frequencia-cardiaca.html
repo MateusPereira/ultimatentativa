@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Calcule suas zonas de frequência cardíaca para otimizar seus treinos. Descubra os batimentos por minuto ideais para queima de gordura, ganho de performance e mais.">
+    <title>Calculadora de Zonas de Frequência Cardíaca</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased">
+
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8 max-w-4xl">
+        <header class="text-center mb-8 pt-8">
+            <div class="flex justify-center mb-6">
+                <img src="https://mateuspereira.com/wp-content/uploads/2025/04/site-1024x256.png" alt="Logo" class="h-16 w-auto">
+            </div>
+            <h1 class="text-3xl sm:text-4xl font-bold text-slate-900">Calculadora de Frequência Cardíaca</h1>
+            <p class="mt-2 text-lg text-slate-600">Encontre suas zonas de treino para otimizar seus resultados.</p>
+        </header>
+
+        <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-lg border border-slate-200">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label for="age" class="block text-sm font-medium text-slate-700">Sua Idade</label>
+                    <input type="number" id="age" placeholder="Ex: 30" class="mt-1 block w-full bg-slate-100 border-slate-300 rounded-lg shadow-sm p-3">
+                </div>
+                <div>
+                    <label for="rhr" class="block text-sm font-medium text-slate-700">FC em Repouso (BPM) <span class="text-slate-400">(Opcional)</span></label>
+                    <input type="number" id="rhr" placeholder="Ex: 60" class="mt-1 block w-full bg-slate-100 border-slate-300 rounded-lg shadow-sm p-3">
+                </div>
+            </div>
+            <div class="mt-8">
+                <button id="calculate-btn-hr" class="w-full bg-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-indigo-700 transition-colors text-lg">
+                    Calcular Zonas
+                </button>
+            </div>
+        </div>
+
+        <div id="results-section-hr" class="mt-8 hidden">
+            <div class="text-center bg-white p-6 rounded-2xl shadow-lg border border-slate-200 mb-6">
+                <p class="text-lg text-slate-600">Sua Frequência Cardíaca Máxima (FCM) estimada é:</p>
+                <p id="max-hr-result" class="text-5xl font-bold text-indigo-600 my-1">0 BPM</p>
+                <p id="formula-used" class="text-xs text-slate-500"></p>
+            </div>
+            
+            <div id="zones-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                </div>
+        </div>
+        <footer class="text-center mt-10 text-sm text-slate-500">
+            <p>Consulte um profissional de educação física ou cardiologista para avaliações precisas.</p>
+        </footer>
+    </div>
+
+    <script>
+    (function() {
+        const calculateBtn = document.getElementById('calculate-btn-hr');
+        calculateBtn.addEventListener('click', () => {
+            const age = parseInt(document.getElementById('age').value);
+            const rhr = parseInt(document.getElementById('rhr').value) || null;
+
+            if (!age || age <= 0) {
+                alert('Por favor, insira uma idade válida.');
+                return;
+            }
+
+            const maxHR = 220 - age;
+            document.getElementById('max-hr-result').textContent = `${maxHR} BPM`;
+            
+            const zones = [
+                { name: 'Zona 1: Muito Leve', intensity: '50-60%', low: 0.5, high: 0.6, color: 'bg-sky-100', benefit: 'Recuperação ativa, aquecimento.' },
+                { name: 'Zona 2: Leve', intensity: '60-70%', low: 0.6, high: 0.7, color: 'bg-green-100', benefit: 'Melhora a resistência e queima de gordura.' },
+                { name: 'Zona 3: Moderado', intensity: '70-80%', low: 0.7, high: 0.8, color: 'bg-yellow-100', benefit: 'Melhora da capacidade aeróbica.' },
+                { name: 'Zona 4: Difícil', intensity: '80-90%', low: 0.8, high: 0.9, color: 'bg-orange-100', benefit: 'Aumento do limiar anaeróbico.' },
+                { name: 'Zona 5: Máximo', intensity: '90-100%', low: 0.9, high: 1.0, color: 'bg-red-100', benefit: 'Esforço máximo, treinos de curta duração.' }
+            ];
+
+            const zonesList = document.getElementById('zones-list');
+            zonesList.innerHTML = '';
+            let formulaUsedText = '';
+
+            zones.forEach(zone => {
+                let lowerBPM, upperBPM;
+                if (rhr && rhr > 0) {
+                    // Fórmula de Karvonen
+                    const hrr = maxHR - rhr;
+                    lowerBPM = Math.round((hrr * zone.low) + rhr);
+                    upperBPM = Math.round((hrr * zone.high) + rhr);
+                    formulaUsedText = 'Zonas calculadas com a Fórmula de Karvonen (FC de Repouso)';
+                } else {
+                    // Fórmula Padrão
+                    lowerBPM = Math.round(maxHR * zone.low);
+                    upperBPM = Math.round(maxHR * zone.high);
+                    formulaUsedText = 'Zonas calculadas com a Fórmula Padrão (220 - Idade)';
+                }
+                
+                zonesList.innerHTML += `
+                    <div class="p-4 rounded-lg ${zone.color}">
+                        <h4 class="font-bold">${zone.name}</h4>
+                        <p class="text-sm text-slate-600">${zone.intensity}</p>
+                        <p class="text-2xl font-bold my-2">${lowerBPM} - ${upperBPM} <span class="text-base font-normal">BPM</span></p>
+                        <p class="text-xs text-slate-700">${zone.benefit}</p>
+                    </div>
+                `;
+            });
+            
+            document.getElementById('formula-used').textContent = formulaUsedText;
+            document.getElementById('results-section-hr').classList.remove('hidden');
+        });
+    })();
+    </script>
+</body>
+</html>

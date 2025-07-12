@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta name="description" content="Compare o custo-benefício de dois suplementos de Whey Protein. Descubra qual oferece mais proteína por real e o melhor preço por dose para fazer a escolha mais inteligente.">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora Custo-Benefício de Whey Protein</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Estilo customizado para usar a fonte Inter */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Melhora a aparência dos inputs numéricos no Chrome/Safari */
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+          -webkit-appearance: none; 
+          margin: 0; 
+        }
+        input[type=number] {
+          -moz-appearance: textfield;
+        }
+        /* Animação de destaque */
+        .highlight-winner {
+            animation: pulse-border 2s infinite;
+            border-color: #10B981; /* Verde esmeralda */
+        }
+        @keyframes pulse-border {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+            }
+            50% {
+                box-shadow: 0 0 0 4px rgba(16, 185, 129, 0);
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800 antialiased">
+
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8 max-w-6xl">
+        
+        <!-- Cabeçalho -->
+        <header class="text-center mb-8">
+            <!-- Logo -->
+            <div class="flex justify-center mb-6">
+                <img src="https://mateuspereira.com/wp-content/uploads/2025/04/site-1024x256.png" 
+                     alt="Logo Mateus Pereira" 
+                     class="h-16 w-auto"
+                     onerror="this.onerror=null; this.src='https://placehold.co/400x100/e2e8f0/4a5568?text=Logo+Nao+Encontrado';">
+            </div>
+            <h1 class="text-3xl sm:text-4xl font-bold text-gray-900">Calculadora de Custo-Benefício</h1>
+            <p class="mt-2 text-lg text-gray-600">Compare dois suplementos e descubra qual vale mais a pena.</p>
+        </header>
+
+        <!-- Grid principal da calculadora -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            
+            <!-- Coluna do Produto 1 -->
+            <div id="product-card-1" class="bg-white p-6 rounded-2xl shadow-lg border-2 border-transparent transition-all duration-300">
+                <h2 class="text-2xl font-bold mb-6 text-center text-gray-900">Produto 1</h2>
+                <div class="space-y-4">
+                    <div>
+                        <label for="price1" class="block text-sm font-medium text-gray-700">Preço (R$)</label>
+                        <input type="number" id="price1" placeholder="Ex: 149,90" class="mt-1 block w-full bg-gray-50 border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 p-3">
+                    </div>
+                    <div>
+                        <label for="weight1" class="block text-sm font-medium text-gray-700">Peso Total da Embalagem (g)</label>
+                        <input type="number" id="weight1" placeholder="Ex: 900" class="mt-1 block w-full bg-gray-50 border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 p-3">
+                    </div>
+                    <div>
+                        <label for="serving_size1" class="block text-sm font-medium text-gray-700">Tamanho da Dose/Porção (g)</label>
+                        <input type="number" id="serving_size1" placeholder="Ex: 30" class="mt-1 block w-full bg-gray-50 border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 p-3">
+                    </div>
+                    <div>
+                        <label for="protein_per_serving1" class="block text-sm font-medium text-gray-700">Proteína por Dose/Porção (g)</label>
+                        <input type="number" id="protein_per_serving1" placeholder="Ex: 24" class="mt-1 block w-full bg-gray-50 border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 p-3">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Coluna do Produto 2 -->
+            <div id="product-card-2" class="bg-white p-6 rounded-2xl shadow-lg border-2 border-transparent transition-all duration-300">
+                <h2 class="text-2xl font-bold mb-6 text-center text-gray-900">Produto 2</h2>
+                <div class="space-y-4">
+                    <div>
+                        <label for="price2" class="block text-sm font-medium text-gray-700">Preço (R$)</label>
+                        <input type="number" id="price2" placeholder="Ex: 189,90" class="mt-1 block w-full bg-gray-50 border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 p-3">
+                    </div>
+                    <div>
+                        <label for="weight2" class="block text-sm font-medium text-gray-700">Peso Total da Embalagem (g)</label>
+                        <input type="number" id="weight2" placeholder="Ex: 907" class="mt-1 block w-full bg-gray-50 border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 p-3">
+                    </div>
+                    <div>
+                        <label for="serving_size2" class="block text-sm font-medium text-gray-700">Tamanho da Dose/Porção (g)</label>
+                        <input type="number" id="serving_size2" placeholder="Ex: 31" class="mt-1 block w-full bg-gray-50 border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 p-3">
+                    </div>
+                    <div>
+                        <label for="protein_per_serving2" class="block text-sm font-medium text-gray-700">Proteína por Dose/Porção (g)</label>
+                        <input type="number" id="protein_per_serving2" placeholder="Ex: 25" class="mt-1 block w-full bg-gray-50 border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 p-3">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seção de Resultados -->
+        <div id="results-section" class="mt-8 bg-white p-6 rounded-2xl shadow-lg hidden">
+            <h2 class="text-2xl font-bold mb-6 text-center text-gray-900">Resultados da Análise</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-center">
+                
+                <!-- Resultados Produto 1 -->
+                <div id="result-box-1" class="p-4 bg-gray-50 rounded-xl relative">
+                    <span id="winner-badge-1" class="absolute -top-3 -right-3 bg-emerald-500 text-white text-xs font-bold px-3 py-1 rounded-full hidden">MELHOR CUSTO-BENEFÍCIO</span>
+                    <h3 class="font-bold text-lg mb-4 text-gray-800">Produto 1</h3>
+                    <div class="space-y-3 text-left">
+                        <p><strong>Preço por Dose:</strong> <span id="price_per_serving1" class="font-semibold text-indigo-600">R$ 0,00</span></p>
+                        <p><strong>Preço por Grama de Proteína:</strong> <span id="price_per_gram1" class="font-semibold text-indigo-600">R$ 0,00</span></p>
+                        <p><strong>Gramas de Proteína por R$1:</strong> <span id="protein_per_real1" class="font-semibold text-indigo-600">0.00 g</span></p>
+                        <hr class="my-3 border-gray-200">
+                        <p class="text-sm text-gray-600">Total de Doses: <span id="total_servings1">0</span></p>
+                        <p class="text-sm text-gray-600">Total de Proteína: <span id="total_protein1">0 g</span></p>
+                    </div>
+                </div>
+
+                <!-- Resultados Produto 2 -->
+                <div id="result-box-2" class="p-4 bg-gray-50 rounded-xl relative">
+                    <span id="winner-badge-2" class="absolute -top-3 -right-3 bg-emerald-500 text-white text-xs font-bold px-3 py-1 rounded-full hidden">MELHOR CUSTO-BENEFÍCIO</span>
+                    <h3 class="font-bold text-lg mb-4 text-gray-800">Produto 2</h3>
+                    <div class="space-y-3 text-left">
+                        <p><strong>Preço por Dose:</strong> <span id="price_per_serving2" class="font-semibold text-indigo-600">R$ 0,00</span></p>
+                        <p><strong>Preço por Grama de Proteína:</strong> <span id="price_per_gram2" class="font-semibold text-indigo-600">R$ 0,00</span></p>
+                        <p><strong>Gramas de Proteína por R$1:</strong> <span id="protein_per_real2" class="font-semibold text-indigo-600">0.00 g</span></p>
+                        <hr class="my-3 border-gray-200">
+                        <p class="text-sm text-gray-600">Total de Doses: <span id="total_servings2">0</span></p>
+                        <p class="text-sm text-gray-600">Total de Proteína: <span id="total_protein2">0 g</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Rodapé -->
+        <footer class="text-center mt-10 text-sm text-gray-500">
+            <p>Criado para ajudar você a fazer a melhor escolha. Preencha os campos para calcular.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Seleciona todos os elementos de input
+        const inputs = document.querySelectorAll('input[type="number"]');
+        const resultsSection = document.getElementById('results-section');
+
+        // Adiciona um 'event listener' para cada input que chama a função de cálculo
+        inputs.forEach(input => {
+            input.addEventListener('input', calculate);
+        });
+
+        // Função para formatar números como moeda brasileira (Real)
+        function formatCurrency(value) {
+            if (isNaN(value) || !isFinite(value)) return "R$ 0,00";
+            return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        }
+
+        // Função principal que realiza todos os cálculos
+        function calculate() {
+            // Pega os valores dos inputs para o produto 1 e converte para número
+            const price1 = parseFloat(document.getElementById('price1').value.replace(',', '.')) || 0;
+            const weight1 = parseFloat(document.getElementById('weight1').value) || 0;
+            const serving_size1 = parseFloat(document.getElementById('serving_size1').value) || 0;
+            const protein_per_serving1 = parseFloat(document.getElementById('protein_per_serving1').value) || 0;
+
+            // Pega os valores dos inputs para o produto 2 e converte para número
+            const price2 = parseFloat(document.getElementById('price2').value.replace(',', '.')) || 0;
+            const weight2 = parseFloat(document.getElementById('weight2').value) || 0;
+            const serving_size2 = parseFloat(document.getElementById('serving_size2').value) || 0;
+            const protein_per_serving2 = parseFloat(document.getElementById('protein_per_serving2').value) || 0;
+
+            // --- Cálculos para o Produto 1 ---
+            const total_servings1 = serving_size1 > 0 ? weight1 / serving_size1 : 0;
+            const total_protein1 = total_servings1 * protein_per_serving1;
+            const price_per_serving1 = total_servings1 > 0 ? price1 / total_servings1 : 0;
+            const price_per_gram1 = total_protein1 > 0 ? price1 / total_protein1 : 0;
+            const protein_per_real1 = price1 > 0 ? total_protein1 / price1 : 0;
+
+            // --- Cálculos para o Produto 2 ---
+            const total_servings2 = serving_size2 > 0 ? weight2 / serving_size2 : 0;
+            const total_protein2 = total_servings2 * protein_per_serving2;
+            const price_per_serving2 = total_servings2 > 0 ? price2 / total_servings2 : 0;
+            const price_per_gram2 = total_protein2 > 0 ? price2 / total_protein2 : 0;
+            const protein_per_real2 = price2 > 0 ? total_protein2 / price2 : 0;
+            
+            // Verifica se há dados suficientes para mostrar os resultados
+            const hasData1 = price1 > 0 && weight1 > 0 && serving_size1 > 0 && protein_per_serving1 > 0;
+            const hasData2 = price2 > 0 && weight2 > 0 && serving_size2 > 0 && protein_per_serving2 > 0;
+
+            if (hasData1 || hasData2) {
+                resultsSection.classList.remove('hidden');
+            } else {
+                resultsSection.classList.add('hidden');
+            }
+
+            // --- Atualiza os resultados na tela para o Produto 1 ---
+            document.getElementById('price_per_serving1').textContent = formatCurrency(price_per_serving1);
+            document.getElementById('price_per_gram1').textContent = formatCurrency(price_per_gram1);
+            document.getElementById('protein_per_real1').textContent = `${protein_per_real1.toFixed(2)} g`;
+            document.getElementById('total_servings1').textContent = total_servings1.toFixed(1);
+            document.getElementById('total_protein1').textContent = `${total_protein1.toFixed(1)} g`;
+
+            // --- Atualiza os resultados na tela para o Produto 2 ---
+            document.getElementById('price_per_serving2').textContent = formatCurrency(price_per_serving2);
+            document.getElementById('price_per_gram2').textContent = formatCurrency(price_per_gram2);
+            document.getElementById('protein_per_real2').textContent = `${protein_per_real2.toFixed(2)} g`;
+            document.getElementById('total_servings2').textContent = total_servings2.toFixed(1);
+            document.getElementById('total_protein2').textContent = `${total_protein2.toFixed(1)} g`;
+            
+            // --- Lógica para destacar o vencedor ---
+            const winnerBadge1 = document.getElementById('winner-badge-1');
+            const winnerBadge2 = document.getElementById('winner-badge-2');
+            const resultBox1 = document.getElementById('result-box-1');
+            const resultBox2 = document.getElementById('result-box-2');
+            const productCard1 = document.getElementById('product-card-1');
+            const productCard2 = document.getElementById('product-card-2');
+
+            // Reseta os destaques
+            winnerBadge1.classList.add('hidden');
+            winnerBadge2.classList.add('hidden');
+            resultBox1.classList.remove('highlight-winner');
+            resultBox2.classList.remove('highlight-winner');
+            productCard1.classList.remove('highlight-winner');
+            productCard2.classList.remove('highlight-winner');
+
+            // Compara o preço por grama de proteína para determinar o vencedor
+            if (hasData1 && hasData2) {
+                if (price_per_gram1 < price_per_gram2) {
+                    winnerBadge1.classList.remove('hidden');
+                    resultBox1.classList.add('highlight-winner');
+                    productCard1.classList.add('highlight-winner');
+                } else if (price_per_gram2 < price_per_gram1) {
+                    winnerBadge2.classList.remove('hidden');
+                    resultBox2.classList.add('highlight-winner');
+                    productCard2.classList.add('highlight-winner');
+                }
+                // Se forem iguais, nenhum é destacado como vencedor
+            }
+        }
+    </script>
+</body>
+</html>

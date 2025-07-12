@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Calcule o volume de treino semanal para qualquer grupo muscular. Insira seus exercícios, séries e frequência para otimizar seus ganhos de hipertrofia e força.">
+    <title>Calculadora de Volume de Treino Semanal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style> body { font-family: 'Inter', sans-serif; } </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased">
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8 max-w-4xl">
+        <header class="text-center mb-8 pt-8">
+            <div class="flex justify-center mb-6"><img src="https://mateuspereira.com/wp-content/uploads/2025/04/site-1024x256.png" alt="Logo" class="h-16 w-auto"></div>
+            <h1 class="text-3xl sm:text-4xl font-bold text-slate-900">Calculadora de Volume de Treino</h1>
+            <p class="mt-2 text-lg text-slate-600">Some as séries dos seus exercícios para encontrar seu volume semanal.</p>
+        </header>
+        <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-lg border border-slate-200">
+            <div>
+                <label for="muscle-group" class="block text-lg font-semibold text-slate-700">Qual grupo muscular você quer analisar?</label>
+                <input type="text" id="muscle-group" placeholder="Ex: Peito, Costas, Quadríceps" class="mt-2 block w-full bg-slate-100 border-slate-300 rounded-lg shadow-sm p-3">
+            </div>
+            <hr class="my-6">
+            <div id="exercise-list" class="space-y-4"></div>
+            <div class="flex gap-4 mt-6">
+                <button id="add-exercise-btn" class="w-full bg-slate-200 text-slate-800 font-bold py-3 px-4 rounded-lg hover:bg-slate-300 transition-colors"><i class="fas fa-plus mr-2"></i> Adicionar Exercício</button>
+                <button id="calculate-btn" class="w-full bg-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-indigo-700 transition-colors text-lg">Calcular Volume</button>
+            </div>
+        </div>
+        <div id="results-section" class="mt-8 p-8 text-center bg-white rounded-2xl shadow-lg border border-slate-200 hidden">
+            <h2 id="result-title" class="text-2xl font-bold text-slate-900">Volume para ...</h2>
+            <p class="text-lg text-slate-600 mt-2">Seu volume de treino semanal total é:</p>
+            <p id="total-volume" class="text-7xl font-extrabold text-indigo-600 my-4">0</p>
+            <p class="text-lg text-slate-600 -mt-2 mb-4">séries semanais</p>
+            <div id="volume-feedback" class="text-sm font-semibold p-3 rounded-lg"></div>
+        </div>
+    </div>
+    <script>
+    (function() {
+        const addBtn = document.getElementById('add-exercise-btn');
+        const calcBtn = document.getElementById('calculate-btn');
+        const exerciseList = document.getElementById('exercise-list');
+        let exerciseCount = 0;
+
+        function createExerciseRow() {
+            exerciseCount++;
+            const rowId = `row-${exerciseCount}`;
+            const newRow = document.createElement('div');
+            newRow.id = rowId;
+            newRow.className = "exercise-row grid grid-cols-1 sm:grid-cols-12 gap-2 items-center border p-3 rounded-lg bg-slate-50";
+            newRow.innerHTML = `
+                <div class="sm:col-span-6"><label class="text-xs font-medium text-slate-500">Exercício (Opcional)</label><input type="text" class="exercise-name w-full p-2 border-slate-300 rounded" placeholder="Ex: Supino Reto"></div>
+                <div class="sm:col-span-2"><label class="text-xs font-medium text-slate-500">Séries</label><input type="number" class="sets-input w-full p-2 border-slate-300 rounded" placeholder="Ex: 4"></div>
+                <div class="sm:col-span-3"><label class="text-xs font-medium text-slate-500">Frequência/Semana</label><input type="number" class="freq-input w-full p-2 border-slate-300 rounded" value="1" placeholder="Ex: 1"></div>
+                <div class="sm:col-span-1 text-right"><button class="remove-btn text-red-400 hover:text-red-600 p-2" data-target="${rowId}"><i class="fas fa-trash-alt"></i></button></div>
+            `;
+            exerciseList.appendChild(newRow);
+        }
+
+        addBtn.addEventListener('click', createExerciseRow);
+        
+        exerciseList.addEventListener('click', (e) => {
+            const removeButton = e.target.closest('.remove-btn');
+            if (removeButton) {
+                const targetId = removeButton.dataset.target;
+                document.getElementById(targetId)?.remove();
+            }
+        });
+
+        calcBtn.addEventListener('click', () => {
+            const rows = exerciseList.querySelectorAll('.exercise-row');
+            if (rows.length === 0) { alert('Adicione pelo menos um exercício.'); return; }
+            let totalVolume = 0;
+            rows.forEach(row => {
+                const sets = parseInt(row.querySelector('.sets-input').value) || 0;
+                const freq = parseInt(row.querySelector('.freq-input').value) || 0;
+                totalVolume += sets * freq;
+            });
+            const muscleGroup = document.getElementById('muscle-group').value || 'seu músculo';
+            document.getElementById('result-title').textContent = `Volume para ${muscleGroup}`;
+            document.getElementById('total-volume').textContent = totalVolume;
+            const feedbackEl = document.getElementById('volume-feedback');
+            if (totalVolume < 10) {
+                feedbackEl.className = 'text-sm font-semibold p-3 rounded-lg bg-blue-100 text-blue-800';
+                feedbackEl.textContent = 'Este volume pode ser baixo para hipertrofia, ideal para iniciantes ou manutenção.';
+            } else if (totalVolume <= 20) {
+                feedbackEl.className = 'text-sm font-semibold p-3 rounded-lg bg-green-100 text-green-800';
+                feedbackEl.textContent = 'Volume ideal! Esta faixa é frequentemente recomendada pela ciência para maximizar a hipertrofia.';
+            } else {
+                feedbackEl.className = 'text-sm font-semibold p-3 rounded-lg bg-red-100 text-red-800';
+                feedbackEl.textContent = 'Atenção, volume muito alto! Monitore sua recuperação para evitar overtraining.';
+            }
+            document.getElementById('results-section').classList.remove('hidden');
+        });
+        
+        createExerciseRow();
+    })();
+    </script>
+</body>
+</html>
